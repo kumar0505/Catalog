@@ -44,7 +44,7 @@ public class CartController : ControllerBase
                     OrderId  = 0,
                     EntryTime = DateTimeOffset.UtcNow,
                 };
-
+                carts.Add(new_cart);
                 CartItem new_item = new CartItem{
                     Id = carts_items.Count + 1,
                     CartId = new_cart.Id,
@@ -63,10 +63,10 @@ public class CartController : ControllerBase
     {
         var cart = carts.Find(c => c.Id == cart_id &&  c.OrderId == 0);
         if (cart != null){ 
-            return BadRequest("Order already placed.");
+            return BadRequest("Cart Not Found");
         } else {
-                List<CartItem> items =  carts_items.FindAll(pd => pd.CartId == cart_id);
-                Order new_order = new Order {
+                List<CartItem> items =  carts_items.FindAll(pd => pd.CartId == cart_id); 
+                Order new_order = new Order{
                     Id = orders.Count + 1,
                     ConsumerId = cart.ConsumerId,
                     TotalAmount = cart.TotalAmount,
@@ -75,6 +75,9 @@ public class CartController : ControllerBase
                     EntryTime = DateTimeOffset.UtcNow,
                 };
 
+                orders.Add(new_order);
+                cart.OrderId = new_order.Id;
+                
                 for (int i = 0; i < items.Count; i++) {
                     CartItem item = items[i];
                     OrderData new_item = new OrderData {
@@ -86,7 +89,6 @@ public class CartController : ControllerBase
                     };
                     orders_data.Add(new_item);
                 }
-
                 return Ok(orders_data.FindAll(pd => pd.OrderId == new_order.Id));
         }
     }

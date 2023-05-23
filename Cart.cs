@@ -26,7 +26,7 @@ public class Order
 {
     public int  Id { get; set; } = 0;
     public int  ConsumerId { get; set; } = 0;
-    public string Status { get; set; } = "P";
+    public string Status { get; set; } = string.Empty;
     public decimal TotalAmount { get; set; } = 0;
     public int ItemCount  { get; set; } = 0;
     public DateTimeOffset EntryTime { get; set; } = DateTimeOffset.UtcNow;
